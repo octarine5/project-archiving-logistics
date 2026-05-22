@@ -6,9 +6,9 @@
 |---|---|---|
 | Smoke test (tech-blog) | 1 | ✅ pushed |
 | Tier 1 — small/medium projects (parallel ×5) | 28 | ✅ all pushed |
-| Tier 2 — heavyweights (serial) | 2 of 3 | ✅ ml-training-platform, automation-ai-agent · ❌ leverage-work-prototypes-drill (disk full mid-`git add`) |
+| Tier 2 — heavyweights (serial) | 3 of 3 | ✅ ml-training-platform · automation-ai-agent · leverage-work-prototypes-drill (after ~4.9 GB reclaim) |
 | Hub itself | 1 | ✅ pushed |
-| **Total** | **32 of 33** | **97% complete** |
+| **Total** | **33 of 33** | **100% complete** |
 
 ## What each pushed repo got
 
@@ -19,27 +19,15 @@
 - Source-control snippet appended to existing README
 - `origin` pointing at `github.com/octarine5/<repo>` (public)
 
-## Blocker
+## Disk-full incident (resolved)
 
-`leverage_work_prototypes_drill` (1.6GB, 20,432 files) failed during `git add` because the disk filled to 100% during automation_ai_agent's pack write. A partial `.git/` (15MB) exists at the project root.
+The first attempt at `leverage_work_prototypes_drill` (1.6GB, 20,432 files) hit ENOSPC mid-`git add` because automation_ai_agent's pack write had pushed the disk to 100%. Resolution:
 
-To resume:
+1. User ran the 4 reclaim commands from REMOVAL_CANDIDATES.md (~4.9 GB freed)
+2. The partial `/Users/diwang/Code/leverage_work_prototypes_drill/.git` was removed
+3. `bash scripts/bootstrap-all.sh --parallel 1 --only leverage-work-prototypes-drill` succeeded in 22s
 
-```bash
-# 1. Free space (see REMOVAL_CANDIDATES.md Section 2 — 9.2GB available to reclaim)
-rm -rf /Users/diwang/Code/automation_ai_agent/sota_prototype_drill/profilesapp/node_modules  # 1.3GB
-rm -rf /Users/diwang/Code/automation_ai_agent/profilesapp/node_modules                       # 1.3GB
-rm -rf /Users/diwang/Code/ml-training-platform/.venv                                         # 1.2GB
-rm -rf /Users/diwang/Code/ml-training-platform/artifacts/phase_checkpoints                   # 1.1GB
-# Total: 4.9GB freed
-
-# 2. Clean the partial .git
-rm -rf /Users/diwang/Code/leverage_work_prototypes_drill/.git
-
-# 3. Re-run the bootstrap
-cd /Users/diwang/Code/project-archiving-logitstics
-bash scripts/bootstrap-all.sh --parallel 1 --only leverage-work-prototypes-drill
-```
+Lesson: bootstrap order matters when disk is tight — bootstrap the smallest projects first (their packs compact quickly), or reclaim before starting the heavyweight tier.
 
 ## The 32 pushed repos
 
