@@ -1,0 +1,82 @@
+# Bootstrap report — 2026-05-22
+
+## Outcome
+
+| Tier | Count | Result |
+|---|---|---|
+| Smoke test (tech-blog) | 1 | ✅ pushed |
+| Tier 1 — small/medium projects (parallel ×5) | 28 | ✅ all pushed |
+| Tier 2 — heavyweights (serial) | 2 of 3 | ✅ ml-training-platform, automation-ai-agent · ❌ leverage-work-prototypes-drill (disk full mid-`git add`) |
+| Hub itself | 1 | ✅ pushed |
+| **Total** | **32 of 33** | **97% complete** |
+
+## What each pushed repo got
+
+- `.github/workflows/ci.yml` — lint + tests + Docker image to GHCR
+- `.github/workflows/loadtest.yml` — nightly locust (services only — projects with a `loadtest/locustfile.py`)
+- `artifacts/samples/` directory with policy README
+- Strict `.gitignore` filtering venvs, model checkpoints, large binaries
+- Source-control snippet appended to existing README
+- `origin` pointing at `github.com/octarine5/<repo>` (public)
+
+## Blocker
+
+`leverage_work_prototypes_drill` (1.6GB, 20,432 files) failed during `git add` because the disk filled to 100% during automation_ai_agent's pack write. A partial `.git/` (15MB) exists at the project root.
+
+To resume:
+
+```bash
+# 1. Free space (see REMOVAL_CANDIDATES.md Section 2 — 9.2GB available to reclaim)
+rm -rf /Users/diwang/Code/automation_ai_agent/sota_prototype_drill/profilesapp/node_modules  # 1.3GB
+rm -rf /Users/diwang/Code/automation_ai_agent/profilesapp/node_modules                       # 1.3GB
+rm -rf /Users/diwang/Code/ml-training-platform/.venv                                         # 1.2GB
+rm -rf /Users/diwang/Code/ml-training-platform/artifacts/phase_checkpoints                   # 1.1GB
+# Total: 4.9GB freed
+
+# 2. Clean the partial .git
+rm -rf /Users/diwang/Code/leverage_work_prototypes_drill/.git
+
+# 3. Re-run the bootstrap
+cd /Users/diwang/Code/project-archiving-logitstics
+bash scripts/bootstrap-all.sh --parallel 1 --only leverage-work-prototypes-drill
+```
+
+## The 32 pushed repos
+
+Top-level services (14):
+- ai-code-agent · batch-inference-engine · distributed-message-queue · feature-serving-system
+- gpu-resource-platform · gpu-workload-manager · local-model-serving-api · ml-training-platform
+- model-architecture-benchmark · payment-system · personalized-model-agent · proximity-search-service
+- recommendation-ads-system · video-streaming-platform
+
+Standalone & umbrellas (3):
+- investment-decision-engine · automation-ai-agent · tech-blog-staffeng-impact-axis
+
+Drill subprojects with preserved git history (14):
+- drill-p4-distributed-graph-netflix · drill-p20-model-serving-platform
+- drill-ad-event-aggregator · drill-chat-system · drill-google-drive · drill-instagram-timeline
+- drill-notification-system · drill-payments · drill-s3-object-store · drill-search-auto-complete
+- drill-uber-ride · drill-url-shortener · drill-video-streaming · drill-web-crawler
+
+Hub (1):
+- project-archiving-logistics
+
+## Reports
+
+- [`../STATUS.md`](../STATUS.md) — per-project dashboard (33 rows × git/CI/origin/size)
+- [`../REMOVAL_CANDIDATES.md`](../REMOVAL_CANDIDATES.md) — Section 1 whole-project tiers · Section 2: **9.2GB reclaimable in 32 subdirs**
+- [`../logs/bootstrap-run-20260522-154220.log`](../logs/bootstrap-run-20260522-154220.log) — Tier 1 detail
+- [`../logs/bootstrap-run-20260522-155142.log`](../logs/bootstrap-run-20260522-155142.log) — Tier 2 detail
+- [`../logs/bootstrap.log`](../logs/bootstrap.log) — append-only audit trail
+
+## Daily sync — your activation steps
+
+```bash
+cp scripts/com.octarine5.archiving.sync.plist ~/Library/LaunchAgents/
+launchctl load -w ~/Library/LaunchAgents/com.octarine5.archiving.sync.plist
+launchctl list | grep com.octarine5.archiving.sync   # verify
+launchctl start com.octarine5.archiving.sync         # one-shot test (optional)
+tail -50 logs/launchd.out.log                        # see what happened
+```
+
+Runs daily at **09:15 local time**, committing any uncommitted work as `sync: daily archive YYYY-MM-DD` and pushing.
