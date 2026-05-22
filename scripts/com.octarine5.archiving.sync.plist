@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.octarine5.archiving.sync</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/diwang/Code/project-archiving-logitstics/scripts/sync-all.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/diwang/Code/project-archiving-logitstics</string>
+
+    <!-- Run daily at 09:15 local time -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>9</integer>
+        <key>Minute</key>
+        <integer>15</integer>
+    </dict>
+
+    <!-- If the Mac was asleep at the scheduled time, run as soon as it wakes -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <!-- Make sure git, gh, and python3 are discoverable -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>HOME</key>
+        <string>/Users/diwang</string>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/diwang/Code/project-archiving-logitstics/logs/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/diwang/Code/project-archiving-logitstics/logs/launchd.err.log</string>
+
+    <!-- Don't restart on failure — just wait for tomorrow -->
+    <key>KeepAlive</key>
+    <false/>
+</dict>
+</plist>

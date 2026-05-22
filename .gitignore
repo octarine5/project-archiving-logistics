@@ -1,0 +1,115 @@
+# --- Python -----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+.Python
+build/
+dist/
+.eggs/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.tox/
+
+# --- Virtual envs -----------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+.env
+*.venv/
+contexthub_venv/
+
+# --- Node -------------------------------------------------------------------
+node_modules/
+.npm/
+.yarn/
+.pnp.*
+dist/
+build/
+.next/
+.nuxt/
+.cache/
+.vite/
+.parcel-cache/
+
+# Tool-managed local installs (node binaries, JDKs, kafka tarballs etc.)
+**/.local/
+*.tgz
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.zip
+*.jar
+*.dylib
+*.so
+*.dll
+
+# --- IDEs / OS --------------------------------------------------------------
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+.ipynb_checkpoints/
+
+# --- Logs & runtime ---------------------------------------------------------
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# --- ML / data artifacts (large binaries should not live in git) ------------
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.safetensors.zst
+*.gguf
+*.ckpt
+*.onnx
+*.h5
+*.pkl
+*.pickle
+*.npz
+*.parquet
+*.feather
+*.arrow
+checkpoints/
+weights/
+models/cache/
+datasets/
+data/raw/
+data/processed/
+mlruns/
+wandb/
+artifacts/phase_checkpoints/
+artifacts/registry/
+artifacts/checkpoints/
+
+# Allow tiny sample artifacts (committed under artifacts/samples/)
+!artifacts/samples/**
+
+# --- Load test outputs ------------------------------------------------------
+loadtest/run_*.csv
+loadtest/run_*.html
+loadtest-results/
+traffic.jsonl
+
+# --- Local secrets / config -------------------------------------------------
+*.env.local
+.envrc
+secrets/
+credentials.json
+*.pem
+*.key
+
+# --- Coverage / temp --------------------------------------------------------
+coverage/
+tmp/
+temp/

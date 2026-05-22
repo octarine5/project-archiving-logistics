@@ -1,0 +1,344 @@
+# Canonical manifest of /Users/diwang/Code projects under archiving + sync.
+#
+# Each entry is a GitHub repo target. Sub-projects with their own .git history
+# are split into their own repo; sub-projects without independent history are
+# rolled under an umbrella repo.
+#
+# Fields:
+#   path:        absolute path on disk
+#   repo:        target GitHub repo name (slug under github.com/octarine5/<repo>)
+#   stack:       primary language/runtime — drives CI workflow template choice
+#   kind:        service | cli | library | umbrella | spa | hub | notes
+#   audit_wave:  1 | 2 | 3 | none  — from AUDIT_REPORT.md / COMPLETION_REPORT.md
+#   slo_passed:  yes | no | n/a    — from COMPLETION_REPORT.md measurements
+#   has_app:     yes | no          — whether there's an HTTP entrypoint
+#   visibility:  public | private  — user chose public for all
+#   notes:       free-text caveats
+#
+# To add a project: append an entry. To exclude one: set `skip: true`.
+
+projects:
+
+  # --- Wave-1: 14 top-level service projects -----------------------------------
+  - path: /Users/diwang/Code/ai-code-agent
+    repo: ai-code-agent
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+    notes: "Webhook server with X-Hub-Signature-256 auth"
+
+  - path: /Users/diwang/Code/batch-inference-engine
+    repo: batch-inference-engine
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/distributed-message-queue
+    repo: distributed-message-queue
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+    notes: "10M-msg/s SLO; 4 ADRs"
+
+  - path: /Users/diwang/Code/feature-serving-system
+    repo: feature-serving-system
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: near
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/gpu-resource-platform
+    repo: gpu-resource-platform
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/gpu-workload-manager
+    repo: gpu-workload-manager
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/local-model-serving-api
+    repo: local-model-serving-api
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/ml-training-platform
+    repo: ml-training-platform
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: no
+    has_app: yes
+    visibility: public
+    notes: "CPU-only inference; perf gap documented. Large repo (~2.4GB) — needs aggressive .gitignore."
+
+  - path: /Users/diwang/Code/model-architecture-benchmark
+    repo: model-architecture-benchmark
+    stack: python
+    kind: cli
+    audit_wave: 1
+    slo_passed: yes
+    has_app: no
+    visibility: public
+    notes: "CronJob deploy (no HTTP surface)"
+
+  - path: /Users/diwang/Code/payment-system
+    repo: payment-system
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/personalized-model-agent
+    repo: personalized-model-agent
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/proximity-search-service
+    repo: proximity-search-service
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/recommendation-ads-system
+    repo: recommendation-ads-system
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/video-streaming-platform
+    repo: video-streaming-platform
+    stack: python
+    kind: service
+    audit_wave: 1
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+
+  # --- Wave-2: substantial standalone -----------------------------------------
+  - path: /Users/diwang/Code/investment_decision_engine
+    repo: investment-decision-engine
+    stack: python
+    kind: service
+    audit_wave: 2
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+    notes: "Financial KPIs; needs git init"
+
+  # --- Umbrella portfolios -----------------------------------------------------
+  - path: /Users/diwang/Code/automation_ai_agent
+    repo: automation-ai-agent
+    stack: polyglot
+    kind: umbrella
+    audit_wave: 2
+    slo_passed: mixed
+    has_app: yes
+    visibility: public
+    notes: "Umbrella for 6 wave-2 sub-projects (architect_of_agents, build_system_portfolio, llm-agent-factory, personal_planner_agent, signal-flow-game, sota_prototype_drill). 4.6GB — needs aggressive .gitignore for OSS forks and venvs."
+
+  - path: /Users/diwang/Code/leverage_work_prototypes_drill
+    repo: leverage-work-prototypes-drill
+    stack: python
+    kind: umbrella
+    audit_wave: 2
+    slo_passed: mixed
+    has_app: yes
+    visibility: public
+    notes: "Umbrella for p1-p22 prototypes (excluding p4 and p20 which have own .git history). 1.6GB — needs .gitignore for datasets/checkpoints."
+
+  # --- Sub-projects with independent git history (each → own repo) ------------
+  - path: /Users/diwang/Code/leverage_work_prototypes_drill/p4_distributed_graph_netflix
+    repo: drill-p4-distributed-graph-netflix
+    stack: python
+    kind: service
+    audit_wave: 3
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+    notes: "Has own .git history; published as separate repo to preserve."
+
+  - path: /Users/diwang/Code/leverage_work_prototypes_drill/p20_model_serving_model_platform
+    repo: drill-p20-model-serving-platform
+    stack: python
+    kind: service
+    audit_wave: 2
+    slo_passed: yes
+    has_app: yes
+    visibility: public
+    notes: "Has own .git history."
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/ad_event_aggregagtor
+    repo: drill-ad-event-aggregator
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+    notes: "9 commits of history. Has Docker/k8s/monitoring from system-design-drill bar."
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/chat_system
+    repo: drill-chat-system
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/google_drive
+    repo: drill-google-drive
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/instagram_timeline
+    repo: drill-instagram-timeline
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/notification_system
+    repo: drill-notification-system
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/payments
+    repo: drill-payments
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/s3_object_store
+    repo: drill-s3-object-store
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/search_auto_complete
+    repo: drill-search-auto-complete
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/uber_ride
+    repo: drill-uber-ride
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/url_shortner
+    repo: drill-url-shortener
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/video_streaming
+    repo: drill-video-streaming
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  - path: /Users/diwang/Code/crafting_system_design_drill/web_crawler
+    repo: drill-web-crawler
+    stack: python
+    kind: service
+    audit_wave: none
+    slo_passed: n/a
+    has_app: yes
+    visibility: public
+
+  # --- Other code projects -----------------------------------------------------
+  - path: /Users/diwang/Code/tech-blog-staffeng-impact-axis
+    repo: tech-blog-staffeng-impact-axis
+    stack: node
+    kind: spa
+    audit_wave: none
+    slo_passed: n/a
+    has_app: no
+    visibility: public
+    notes: "Next.js blog; needs git init."
+
+  - path: /Users/diwang/Code/project-archiving-logitstics
+    repo: project-archiving-logistics
+    stack: shell
+    kind: hub
+    audit_wave: none
+    slo_passed: n/a
+    has_app: no
+    visibility: public
+    notes: "This orchestration hub itself."
+
+# Top-level dirs NOT in this manifest (intentional skips, mirrored from AUDIT_REPORT):
+skipped:
+  - {path: /Users/diwang/Code/_diagrams,                  reason: "Diagrams + PDFs, no service."}
+  - {path: /Users/diwang/Code/_templates,                 reason: "Shared scaffolding; lives in this hub instead."}
+  - {path: /Users/diwang/Code/behavior_org_owner_decision, reason: "Audio + book notes."}
+  - {path: /Users/diwang/Code/career_cto_roadmap,         reason: "Personal planning, not a service."}
+  - {path: /Users/diwang/Code/enterprise_research_portofolio, reason: "Mixed Java/Scala/C++ research; out of audit shape. Not in user's selected scope."}
+  - {path: /Users/diwang/Code/recorded_audio_notes,       reason: "Audio dumps."}
+  - {path: /Users/diwang/Code/vision_directions_passion,  reason: "Personal vision pages."}
