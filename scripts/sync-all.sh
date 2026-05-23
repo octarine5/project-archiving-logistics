@@ -60,7 +60,7 @@ for path in "${PROJECTS[@]}"; do
 
   # --- Dry mode: only report what's pending --------------------------------
   if [[ $DRY -eq 1 ]]; then
-    dirty=$(git status --porcelain | wc -l | tr -d ' ')
+    dirty=$(git status --porcelain --ignore-submodules=all | wc -l | tr -d ' ')
     git fetch -q origin "$branch" 2>/dev/null || true
     ahead=$(git rev-list --count "origin/$branch..HEAD" 2>/dev/null || echo 0)
     behind=$(git rev-list --count "HEAD..origin/$branch" 2>/dev/null || echo 0)
@@ -76,9 +76,13 @@ for path in "${PROJECTS[@]}"; do
   fi
   behind=$(git rev-list --count "HEAD..origin/$branch" 2>/dev/null || echo 0)
 
-  dirty_before=$(git status --porcelain | wc -l | tr -d ' ')
+  dirty_before=$(git status --porcelain --ignore-submodules=all | wc -l | tr -d ' ')
 
   # --- Stash uncommitted work if any ---------------------------------------
+  # Note: --ignore-submodules above only affects the dirty count. The stash
+  # itself uses git stash push -u which still ignores submodule pointer moves
+  # by default (those don't get stashed, which is what we want here — broken
+  # submodule refs in some repos should not be auto-committed).
   stashed=0
   if (( dirty_before > 0 )); then
     if git stash push -u -q -m "$STASH_TAG" >>"$LOGFILE" 2>&1; then
@@ -115,8 +119,11 @@ for path in "${PROJECTS[@]}"; do
   fi
 
   # --- Commit any still-dirty state ----------------------------------------
-  git add -A
-  if git diff --cached --quiet; then
+  # NB: we do NOT add submodule pointer changes (some repos have broken
+  # submodule refs with no .gitmodules — auto-committing those phantom
+  # pointers would create orphan commits in the parent).
+  git add -A -- ':!*/profilesapp' ':!profilesapp' 2>/dev/null || git add -A
+  if git diff --cached --quiet --ignore-submodules=all; then
     # Nothing local to commit. If we pulled, push so origin sees we're in sync.
     if (( behind > 0 )); then
       if git push origin "$branch" >>"$LOGFILE" 2>&1; then
